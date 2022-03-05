@@ -1,0 +1,5 @@
+--format documentation
+--color
+--force-color
+--require spec_helper
+--order random

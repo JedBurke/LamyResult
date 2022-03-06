@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Wrap results with a status and a value.'
   spec.homepage      = 'https://evrnetwork.co.za'
-  spec.license       = 'Apache 2'
+  spec.license       = 'Apache-2.0'
   spec.required_ruby_version = ">= 2.5.0"
 
   spec.metadata["homepage_uri"] = spec.homepage

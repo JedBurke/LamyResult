@@ -54,7 +54,7 @@ RSpec.describe Lamy do
   describe '.success' do
     it 'creates an instance with a `success` result' do
       result = Lamy.success('Meta.')
-      expect(result.status).to eq(:success)
+      expect(result.status).to eq(:succeeded)
       expect(result.value).to eq('Meta.')
     end
   end
@@ -204,7 +204,7 @@ RSpec.describe Lamy do
 
         expect(result).to be_a(Hash)
         expect(result).to eq({
-          status: :error,
+          status: :failed,
           value: 'Lamy is not a VTuber'
         })
       end

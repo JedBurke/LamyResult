@@ -2,13 +2,22 @@
 
 Lamy Result is a simple, dependency-free, idiomatic-Ruby utility used to wrap method results with a status and a value. It's inspired by Elixir and Erlang's tagged tuple and Rust's Result/Option.
 
-```Ruby
+Lamy Result is a simple utility (implemented in an unnecessarily complex manner) which wraps method return values with a status. Elixir and Erlang's tagged tuple is the main inspiration, so are Rust's Rusult/Option functions. Despite being influenced by other languages, LR aims to be as idiomatic-Ruby as possible. It's also free of runtime dependencies.
+
+```ruby
 include LamyResult
 
 result = Lamy.ok('Lamy is awesome')
 
 if result.ok?
-  # Do something cool.
+  do_something_cool result.value
+end
+
+# or
+
+# Will only evaluate if the status is :ok
+result.ok_then do |v|
+  do_something_cool v
 end
 
 result.to_a
@@ -48,7 +57,9 @@ For example, Lamy.failed('You did not think this through.') will instantize a La
 
 ## Name?
 
-Named after the hololive Vtuber Yukihana Lamy. I was watching her content while designing the class. Though that if I named it after her I would do a soldi job documenting and testing the code.
+Named after the hololive VTuber Yukihana Lamy. I was watching her content while designing the class. Then I thought that if I named it after her I would do a solid job documenting and testing the code.
+
+Maybe it wasn't a good idea. It's now far more complicated than initially intended.
 
 ## Development
 
@@ -62,4 +73,4 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/JedBur
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The gem is available as open source under the terms of the [Apache 2.0 License](https://opensource.org/licenses/Apache-2.0).

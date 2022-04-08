@@ -3,7 +3,7 @@
 require_relative 'lib/lamy_result/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'Lamy'
+  spec.name          = 'LamyResult'
   spec.version       = LamyResult::VERSION
   spec.authors       = ['Jed Burke']
   spec.email         = ['opensource@evrnetwork.co.za']

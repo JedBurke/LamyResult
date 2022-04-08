@@ -1,6 +1,12 @@
+require 'singleton'
+
 include LamyResult
 
 RSpec.describe Lamy do
+  before(:each) do
+    # Try to reset the class.
+  end
+
   describe '.ok' do
     it 'creates an instance with an `ok` result' do
       result = Lamy.ok('This works')
@@ -211,12 +217,12 @@ RSpec.describe Lamy do
     end
   end
 
-  describe '.add_status_tags' do
+  describe '.define_status_tags' do
     context 'a single tag is passed' do
       it 'creates a status tag for it' do
         expect(Lamy.respond_to?(:wammy)).to be false
 
-        Lamy.add_status_tags('wammy')
+        Lamy.define_status_tags('wammy')
 
         expect(Lamy.respond_to?(:wammy)).to be true
 
@@ -227,18 +233,35 @@ RSpec.describe Lamy do
     end
 
     context 'an array of tags is passed' do
-      it 'creates a status tag for each one' do
-        expect(Lamy.respond_to?(:botan)).to be false
-        expect(Lamy.respond_to?(:nenechi)).to be false
+      context 'does not specify aliases' do
+        it 'creates a status tag for each one' do
+          expect(Lamy.respond_to?(:botan)).to be false
+          expect(Lamy.respond_to?(:nenechi)).to be false
 
-        Lamy.add_status_tags(:botan, :nenechi)
+          Lamy.define_status_tags(:botan, :nenechi)
 
-        expect(Lamy.respond_to?(:botan)).to be true
-        expect(Lamy.respond_to?(:nenechi)).to be true
+          expect(Lamy.respond_to?(:botan)).to be true
+          expect(Lamy.respond_to?(:nenechi)).to be true
 
-        result = Lamy.botan('Hello')
-        expect(result.botan?).to be true
-        expect(result.ok?).to be false
+          result = Lamy.botan('Hello')
+
+          expect(result.botan?).to be true
+          expect(result.polka?).to be true
+          expect(result.ok?).to be false
+        end
+      end
+
+      context 'specifies aliases' do
+        it 'creates a status tag with aliases for each one' do
+          expect(Lamy.respond_to?(:polka)).to be false
+          expect(Lamy.respond_to?(:omarun)).to be false
+
+          Lamy.define_status_tags([:polka, :omarun])
+
+          expect(Lamy.respond_to?(:polka)).to be true
+          expect(Lamy.respond_to?(:omarun)).to be true
+
+        end
       end
     end
   end

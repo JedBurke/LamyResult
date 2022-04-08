@@ -127,13 +127,13 @@ module LamyResult
         new_status, *new_status_aliases = Array(status)
 
         # Defines the short-hand class method like .ok(input)
-        define_status_method(new_status, *new_status_aliases)
+        self.define_status_method(new_status, *new_status_aliases)
 
         # Define status check instance methods like #ok?
-        define_status_check_method(new_status, *new_status_aliases)
+        self.define_status_check_method(new_status, *new_status_aliases)
 
         # Define conditional instance methods like #ok_then
-        define_conditional_then_method(new_status, *new_status_aliases)
+        self.define_conditional_then_method(new_status, *new_status_aliases)
       end
     end
 

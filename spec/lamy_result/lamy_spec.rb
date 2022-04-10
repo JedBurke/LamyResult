@@ -1,15 +1,11 @@
-require 'singleton'
-
-include LamyResult
-
-RSpec.describe Lamy do
-  before(:each) do
-    # Try to reset the class.
+RSpec.describe 'Lamy' do
+  subject do
+    LamyResult::Lamy
   end
 
   describe '.ok' do
     it 'creates an instance with an `ok` result' do
-      result = Lamy.ok('This works')
+      result = subject.ok('This works')
 
       expect(result.status).to eq(:ok)
       expect(result.value).to eq('This works')
@@ -19,7 +15,7 @@ RSpec.describe Lamy do
   describe '#ok?' do
     context 'has an `ok` status' do
       it 'returns true' do
-        result = Lamy.ok('Lamy')
+        result = subject.ok('Lamy')
 
         expect(result.ok?).to be true
       end
@@ -27,7 +23,7 @@ RSpec.describe Lamy do
 
     context 'does not have an `ok` status' do
       it 'returns false' do
-        result = Lamy.failed('Nami')
+        result = subject.failed('Nami')
         expect(result.ok?).to be false
       end
     end
@@ -37,7 +33,7 @@ RSpec.describe Lamy do
     context 'has an `ok` status' do
       context 'has a block' do
         it 'yields the block' do
-          result = Lamy.ok('Lamy')
+          result = subject.ok('Lamy')
           message_formatted = result.ok_then do |m|
             "#{m} is fucking A!"
           end
@@ -48,7 +44,7 @@ RSpec.describe Lamy do
 
       context 'does not have a block' do
         it 'yields the block' do
-          result = Lamy.ok('Lamy')
+          result = subject.ok('Lamy')
           message_formatted = result.ok_then
 
           expect(message_formatted).to eq('Lamy')
@@ -59,7 +55,7 @@ RSpec.describe Lamy do
 
   describe '.success' do
     it 'creates an instance with a `success` result' do
-      result = Lamy.success('Meta.')
+      result = subject.success('Meta.')
       expect(result.status).to eq(:succeeded)
       expect(result.value).to eq('Meta.')
     end
@@ -68,14 +64,14 @@ RSpec.describe Lamy do
   describe '#success?' do
     context 'has a `success` status' do
       it 'returns true' do
-        result = Lamy.success('Meta.')
+        result = subject.success('Meta.')
         expect(result.success?).to be true
       end
     end
 
     context 'does not have a `success` status' do
       it 'returns false' do
-        result = Lamy.failed('Meta.')
+        result = subject.failed('Meta.')
         expect(result.success?).to be false
       end
     end
@@ -83,7 +79,7 @@ RSpec.describe Lamy do
 
   describe '.true' do
     it 'create a instance with a `true` status' do
-      result = Lamy.true('This is Ruby')
+      result = subject.true('This is Ruby')
       expect(result.status).to eq :true
     end
   end
@@ -91,14 +87,14 @@ RSpec.describe Lamy do
   describe '#true?' do
     context 'status is `true`' do
       it 'returns true' do
-        result = Lamy.true('This is Ruby')
+        result = subject.true('This is Ruby')
         expect(result.true?).to be true
       end
     end
 
     context 'status is not `true`' do
       it 'returns false' do
-        result = Lamy.true('This is Ruby')
+        result = subject.true('This is Ruby')
         expect(result.false?).to be false
       end
     end
@@ -108,7 +104,7 @@ RSpec.describe Lamy do
     context 'status is `true`' do
       context 'has a block' do
         it 'yields the block' do
-          result = Lamy.true('Lamy is from hololive 5th Gen')
+          result = subject.true('Lamy is from hololive 5th Gen')
 
           expect(result.true_then { |v| "#{v}!" }).to eq(
             'Lamy is from hololive 5th Gen!'
@@ -126,14 +122,14 @@ RSpec.describe Lamy do
   describe '#status_is?' do
     context 'object status matches the input' do
       it 'returns true' do
-        result = Lamy.failed('Test')
+        result = subject.failed('Test')
         expect(result.status_is?(:failed)).to be true
       end
     end
 
     context 'object does not match the input' do
       it 'returns false' do
-        result = Lamy.success('Test')
+        result = subject.success('Test')
         expect(result.status_is?(:failed)).to be false
       end
     end
@@ -142,13 +138,13 @@ RSpec.describe Lamy do
   describe '#==' do
     context 'object status matches the rval' do
       it 'returns true' do
-        expect(Lamy.failed('Test') == :failed).to be true
+        expect(subject.failed('Test') == :failed).to be true
       end
     end
 
     context 'object does not match the rval' do
       it 'returns false' do
-        expect(Lamy.success('Test') == :failed).to be false
+        expect(subject.success('Test') == :failed).to be false
       end
     end
   end
@@ -156,13 +152,13 @@ RSpec.describe Lamy do
   describe '#===' do
     context 'object status matches the rval' do
       it 'returns true' do
-        expect(Lamy.failed('Test') === :failed).to be true
+        expect(subject.failed('Test') === :failed).to be true
       end
     end
 
     context 'object does not match the rval' do
       it 'returns false' do
-        expect(Lamy.success('Test') === :failed).to be false
+        expect(subject.success('Test') === :failed).to be false
       end
     end
   end
@@ -170,7 +166,7 @@ RSpec.describe Lamy do
   describe '#to_a' do
     context 'status is a boolean' do
       it 'returns an array of the result instance' do
-        result = Lamy.true('Lamy is a VTuber').to_a
+        result = subject.true('Lamy is a VTuber').to_a
         expect(result).to eq([
           true,
           'Lamy is a VTuber'
@@ -180,7 +176,7 @@ RSpec.describe Lamy do
 
     context 'status is not a boolean' do
       it 'returns an array of the result instance' do
-        result = Lamy.ok('Lamy is a VTuber').to_a
+        result = subject.ok('Lamy is a VTuber').to_a
 
         expect(result).to be_an(Array)
         expect(result).to eq([
@@ -194,7 +190,7 @@ RSpec.describe Lamy do
   describe '#to_h' do
     context 'status is a boolean' do
       it 'returns a hash of the result instance' do
-        result = Lamy.false('Lamy is not a VTuber').to_h
+        result = subject.false('Lamy is not a VTuber').to_h
 
         expect(result).to be_a(Hash)
         expect(result).to eq({
@@ -206,7 +202,7 @@ RSpec.describe Lamy do
 
     context 'status is not a boolean' do
       it 'returns a hash of the result instance' do
-        result = Lamy.error('Lamy is not a VTuber').to_h
+        result = subject.error('Lamy is not a VTuber').to_h
 
         expect(result).to be_a(Hash)
         expect(result).to eq({
@@ -220,13 +216,13 @@ RSpec.describe Lamy do
   describe '.define_status_tags' do
     context 'a single tag is passed' do
       it 'creates a status tag for it' do
-        expect(Lamy.respond_to?(:wammy)).to be false
+        expect(subject.respond_to?(:wammy)).to be false
 
-        Lamy.define_status_tags('wammy')
+        subject.define_status_tags('wammy')
 
-        expect(Lamy.respond_to?(:wammy)).to be true
+        expect(subject.respond_to?(:wammy)).to be true
 
-        result = Lamy.wammy('Hello')
+        result = subject.wammy('Hello')
         expect(result.wammy?).to be true
         expect(result.ok?).to be false
       end
@@ -235,31 +231,32 @@ RSpec.describe Lamy do
     context 'an array of tags is passed' do
       context 'does not specify aliases' do
         it 'creates a status tag for each one' do
-          expect(Lamy.respond_to?(:botan)).to be false
-          expect(Lamy.respond_to?(:nenechi)).to be false
+          expect(subject.respond_to?(:botan)).to be false
+          expect(subject.respond_to?(:nenechi)).to be false
 
-          Lamy.define_status_tags(:botan, :nenechi)
+          subject.define_status_tags(:botan, :nenechi)
 
-          expect(Lamy.respond_to?(:botan)).to be true
-          expect(Lamy.respond_to?(:nenechi)).to be true
+          expect(subject.respond_to?(:botan)).to be true
+          expect(subject.respond_to?(:nenechi)).to be true
 
-          result = Lamy.botan('Hello')
+          result = subject.botan('Hello')
 
           expect(result.botan?).to be true
-          expect(result.polka?).to be true
           expect(result.ok?).to be false
+
+          expect { result.polka? }.to raise_error(NoMethodError)
         end
       end
 
       context 'specifies aliases' do
         it 'creates a status tag with aliases for each one' do
-          expect(Lamy.respond_to?(:polka)).to be false
-          expect(Lamy.respond_to?(:omarun)).to be false
+          expect(subject.respond_to?(:polka)).to be false
+          expect(subject.respond_to?(:omarun)).to be false
 
-          Lamy.define_status_tags([:polka, :omarun])
+          subject.define_status_tags([:polka, :omarun])
 
-          expect(Lamy.respond_to?(:polka)).to be true
-          expect(Lamy.respond_to?(:omarun)).to be true
+          expect(subject.respond_to?(:polka)).to be true
+          expect(subject.respond_to?(:omarun)).to be true
 
         end
       end

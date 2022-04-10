@@ -11,47 +11,6 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Wrap results with a status and a value.'
   spec.description   = <<~EOF
     The project is inspired by Elixir and Erlang's tagged tuple and Rust's Result/Option. Despite inspiration from other languages, Lamy Result aims to be idiomatic Ruby and runtime dependency-free.
-
-    Rather than change the way you're doing things. Returning a single result is great for most cases. You'll know if and when you need something more.
-
-    ```ruby
-    include LamyResult
-
-    result = Lamy.ok('Lamy is awesome')
-
-    if result.ok?
-      do_something_cool result.value
-    end
-
-    # or
-
-    # Will only evaluate if the status is :ok
-    result.ok_then do |v|
-      do_something_cool v
-    end
-
-    result.to_a
-    # Output: [:ok, 'Lamy is awesome']
-
-    result.to_h
-    # Output: { status: :ok, value: 'Lamy is awesome' }
-
-
-    # Aliases allow for natural expression.
-
-    def do_another_cool_thing
-      # Report success
-      Lamy.success('It worked')
-    end
-
-    another_result = do_another_cool_thing
-
-    # As in "Was the operation successful?"
-    another_result.successful?
-
-    # As in "Has the operation succeeded?"
-    another_result.succeeded?
-    ```
   EOF
 
   spec.homepage      = 'https://evrnetwork.co.za'

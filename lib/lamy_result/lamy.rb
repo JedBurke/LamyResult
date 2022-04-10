@@ -80,43 +80,6 @@ module LamyResult
       }
     end
 
-    # # Handle method missing errors to dynamically create them when needed.
-    # # Also call the newly created method.
-    # def method_missing(missing_method_symbol, **args, &block)
-    #   case missing_method_symbol.to_s
-
-    #   # Define the required status check method like `#ok?`
-    #   when /^(?<result_status>.+?)\?$/
-
-    #     self
-    #       .class
-    #       .define_method(missing_method_symbol) do
-    #         # Get the status that we need to check. It should have
-    #         # been captured.
-    #         status_is?(Regexp.last_match[:result_status])
-    #       end
-
-    #     send(missing_method_symbol)
-
-    #   # Dynamically define the conditional method like `#ok_then`
-    #   when /^(?<status>.+?)_then$/
-    #     self
-    #       .class
-    #       .send(:define_method, missing_method_symbol) do |&method_block|
-    #         assert_status_then(
-    #           status_to_check: Regexp.last_match[:status],
-    #           &method_block
-    #         )
-    #       end
-
-    #     send(missing_method_symbol, &block)
-
-    #   # There isn't a match, so allow the error to crash the application!
-    #   else
-    #     super
-    #   end
-    # end
-
     # Adds one or more new status tags to be used by the
     def self.define_status_tags(*status_tags)
       # Use Array() over [] to create an array if status_tags is not an array,
@@ -260,11 +223,3 @@ module LamyResult
     )
   end
 end
-
-# TODO: Allow tag aliases.
-# Lamy.define_status_tags([:success, :succeeded, :successful])
-# result = Lamy.success('Hello')
-# result.successful? => true
-
-# TODO: Drop method_missing and define all the methods when the status
-# is added.

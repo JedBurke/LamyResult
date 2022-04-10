@@ -67,7 +67,7 @@ A few pre-designed status labels are included: `success` `ok` `failed` `error` `
 
 As a short-hand way to create a result, each one corresponds to a static method (or class method) on the Lamy class.
 
-For example, Lamy.failed('You did not think this through.') will instantize a Lamy instance with the status set to `:failed` and the value to `You did not think this through.`
+For example, `Lamy.failed('You did not think this through.')` will instantize a Lamy instance with the status set to `:failed` and the value to `You did not think this through.`
 
 
 ## Motivation
@@ -79,12 +79,6 @@ The return value could  be the file name if it exists and false if does not. Ret
 ## Name?
 
 Named after the hololive VTuber Yukihana Lamy. I was watching her content while designing the class. Thought that maybe naming it in honor of her would give me the motivation to deliver a documented and tested production-ready gem. It's now more complicated than initially intended. So maybe it wasn't a good idea.
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 

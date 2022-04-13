@@ -106,7 +106,7 @@ RSpec.describe 'Lamy' do
         it 'yields the block' do
           result = subject.true('Lamy is from hololive 5th Gen')
 
-          expect(result.true_then { |v| "#{v}!" }).to eq(
+          expect(result.true_then {|v| "#{v}!" }).to eq(
             'Lamy is from hololive 5th Gen!'
           )
 
@@ -118,6 +118,39 @@ RSpec.describe 'Lamy' do
     end
   end
 
+  describe '#any?' do
+    context 'one status' do
+      context 'instance status matches' do
+        it 'returns true' do
+          status = subject.ok('Yukihana Lamy is awesome')
+          expect(status.any?(:ok)).to be true
+        end
+      end
+
+      context 'instance status does not match' do
+        it 'returns false' do
+          status = subject.ok('Yukihana Lamy is awesome')
+          expect(status.any?(:error)).to be false
+        end
+      end
+    end
+
+    context 'more than one status' do
+      context 'instance status matches' do
+        it 'returns true' do
+          status = subject.ok('Yukihana Lamy is awesome')
+          expect(status.any?(:success, :ok, :true)).to be true
+        end
+      end
+
+      context 'instance status does not match' do
+        it 'returns false' do
+          status = subject.ok('Yukihana Lamy is awesome')
+          expect(status.any?(:error, :critical)).to be false
+        end
+      end
+    end
+  end
 
   describe '#status_is?' do
     context 'object status matches the input' do
@@ -149,16 +182,16 @@ RSpec.describe 'Lamy' do
     end
   end
 
-  describe '#===' do
+  describe '#==' do
     context 'object status matches the rval' do
       it 'returns true' do
-        expect(subject.failed('Test') === :failed).to be true
+        expect(subject.failed('Test') == :failed).to be true
       end
     end
 
     context 'object does not match the rval' do
       it 'returns false' do
-        expect(subject.success('Test') === :failed).to be false
+        expect(subject.success('Test') == :failed).to be false
       end
     end
   end
@@ -167,10 +200,12 @@ RSpec.describe 'Lamy' do
     context 'status is a boolean' do
       it 'returns an array of the result instance' do
         result = subject.true('Lamy is a VTuber').to_a
-        expect(result).to eq([
-          true,
-          'Lamy is a VTuber'
-        ])
+        expect(result).to eq(
+          [
+            true,
+            'Lamy is a VTuber'
+          ]
+        )
       end
     end
 
@@ -179,10 +214,12 @@ RSpec.describe 'Lamy' do
         result = subject.ok('Lamy is a VTuber').to_a
 
         expect(result).to be_an(Array)
-        expect(result).to eq([
-          :ok,
-          'Lamy is a VTuber'
-        ])
+        expect(result).to eq(
+          [
+            :ok,
+            'Lamy is a VTuber'
+          ]
+        )
       end
     end
   end
@@ -193,10 +230,12 @@ RSpec.describe 'Lamy' do
         result = subject.false('Lamy is not a VTuber').to_h
 
         expect(result).to be_a(Hash)
-        expect(result).to eq({
-          status: false,
-          value: 'Lamy is not a VTuber'
-        })
+        expect(result).to eq(
+          {
+            status: false,
+            value: 'Lamy is not a VTuber'
+          }
+        )
       end
     end
 
@@ -205,10 +244,12 @@ RSpec.describe 'Lamy' do
         result = subject.error('Lamy is not a VTuber').to_h
 
         expect(result).to be_a(Hash)
-        expect(result).to eq({
-          status: :failed,
-          value: 'Lamy is not a VTuber'
-        })
+        expect(result).to eq(
+          {
+            status: :failed,
+            value: 'Lamy is not a VTuber'
+          }
+        )
       end
     end
   end

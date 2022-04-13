@@ -15,11 +15,7 @@ module LamyResult
   #   See .define_status_tags for the method defined at runtime.
   class Lamy
     def initialize(status:, value: nil)
-      @status = status
-                .to_s
-                .downcase
-                .to_sym
-
+      @status = Lamy.format_status(status)
       @value = value
     end
 
@@ -31,11 +27,25 @@ module LamyResult
     # Compares the current instance's status to the input value. This is a
     # lov-level method meant to be used by the #ok? and #success? methods.
     def status_is?(value)
-      @status == value.to_sym
+      @status == Lamy.format_status(value)
     end
 
+    # Compares the status with the input values and returns true if it matches
+    # any of them.
+    #
+    # Usage:
+    #   status = Lamy.ok('Yukihana Lamy is awesome')
+    #   status.any?(:ok, :success, :good)
+    #
+    def any?(*statuses)
+      statuses.any? {|status| status_is?(status) }
+    end
+
+    # Consider: Add assert_any_then(*values, &block)
+    # either_then(*statuses,)
+
     # Calls #status_is? on the `status_to_check` and if true, yields the value.
-    # Otherwise, returns the instance. This is a low-level method meant to be
+    # Otherwise, returns nil. This is a low-level method meant to be
     # used by #ok_then and #success_then methods.
     def assert_status_then(status_to_check:)
       if status_is?(status_to_check)
@@ -44,7 +54,7 @@ module LamyResult
         return @value
       end
 
-      self
+      nil
     end
 
     # Returns the status attribute as a symbol or a TrueClass/FalseClass. This
@@ -53,9 +63,9 @@ module LamyResult
       # If the status is a boolean, return the status as a boolean.
       # Otherwise, return it as a symbol, which it should already be.
       if true? || false?
-        @status.to_s.to_sym == true.to_s.to_sym
+        Lamy.format_status(@status) == Lamy.format_status(true)
       else
-        @status.to_s.to_sym
+        Lamy.format_status(@status)
       end
     end
 
@@ -100,12 +110,19 @@ module LamyResult
       end
     end
 
+    def self.format_status(status)
+      status
+        .to_s
+        .downcase
+        .to_sym
+    end
+
     def self.format_status_check_method(status)
-      "#{status.to_s}?".to_sym
+      self.format_status("#{status}?")
     end
 
     def self.format_conditional_method(status)
-      "#{status.to_s}_then".to_sym
+      self.format_status("#{status}_then")
     end
 
     def self.define_status_method(status, *aliases)
@@ -139,6 +156,7 @@ module LamyResult
 
     def self.define_conditional_then_method(status, *aliases)
       method_symbol = format_conditional_method(status)
+
       status_conditional_aliases = aliases.map do |s|
         format_conditional_method(s)
       end
@@ -149,10 +167,7 @@ module LamyResult
 
       assert_new_instance_method! method_symbol
 
-      define_instance_aliases_for(
-        method_symbol,
-        *status_conditional_aliases
-      )
+      define_instance_aliases_for(method_symbol, *status_conditional_aliases)
     end
 
     # Checks if the method is an instance method, otherwise raises a
@@ -201,6 +216,7 @@ module LamyResult
     # the #status_is? method.
     alias == status_is?
     alias eql? status_is?
+    alias either? any?
 
     class << self
       # The singular form may be more comfortable for users wanting to define
@@ -215,8 +231,8 @@ module LamyResult
 
     # Add the basic tags to the class.
     Lamy.define_status_tags(
-      [:succeeded, :success, :successful],
-      [:failed, :fail, :error],
+      %i[succeeded success successful],
+      %i[failed fail error],
       :ok,
       :true,
       :false

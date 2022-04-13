@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
     The project is inspired by Elixir and Erlang's tagged tuple and Rust's Result/Option. Despite inspiration from other languages, Lamy Result aims to be idiomatic Ruby and runtime dependency-free.
   EOF
 
-  spec.homepage      = 'https://evrnetwork.co.za'
+  spec.homepage      = 'https://github.com/JedBurke/LamyResult'
   spec.license       = 'Apache-2.0'
   spec.required_ruby_version = ">= 2.5.0"
 

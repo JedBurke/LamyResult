@@ -6,7 +6,37 @@ The project is inspired by Elixir and Erlang's tagged tuple and Rust's Result/Op
 
 Rather than change the way you're doing things. Returning a single result is great for most cases. You'll know if and when you need something more.
 
+## Installation
+
+Add this line to your application's Gemfile:
+
 ```ruby
+gem 'lamy_result'
+```
+
+And then execute:
+
+    $ bundle install
+
+Or install it yourself as:
+
+    $ gem install lamy_result
+
+[LamyResult](https://rubygems.org/gems/lamy_result) on RubyGems.org
+
+## Usage
+
+A few pre-designed status labels are included: `succeeded` `ok` `failed` `error` `true` `false`
+
+Providing a short-hand way to create a result, each statuc corresponds to a static method (or class method) on the Lamy class.
+
+For example, `Lamy.failed('You did not think this through.')` will return a Lamy instance with the status set to `:failed` and the value to `You did not think this through.`
+
+Here are some basic examples.
+
+```ruby
+require 'lamy_result'
+
 include LamyResult
 
 result = Lamy.ok('Lamy is awesome')
@@ -44,31 +74,6 @@ another_result.successful?
 # As in "Has the operation succeeded?"
 another_result.succeeded?
 ```
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'lamy_result'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install lamy_result
-
-## Usage
-
-A few pre-designed status labels are included: `success` `ok` `failed` `error` `true` `false`
-
-As a short-hand way to create a result, each one corresponds to a static method (or class method) on the Lamy class.
-
-For example, `Lamy.failed('You did not think this through.')` will instantize a Lamy instance with the status set to `:failed` and the value to `You did not think this through.`
-
 
 ## Motivation
 

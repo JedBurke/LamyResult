@@ -152,6 +152,46 @@ RSpec.describe 'Lamy' do
     end
   end
 
+  describe 'any_then' do
+    context 'status is among input statuses' do
+      context 'does not pass a block' do
+        it 'returns the value' do
+          value = 'Lamy is awesome!'
+          result = subject.ok(value)
+          expect(result.any_then(:ok)).to eq(value)
+        end
+      end
+
+      context 'passes a block' do
+        it 'yields the value to the block' do
+          value = 'Lamy is awesome.'
+          result = subject.ok(value)
+          return_value = result.any_then(:ok, :true, :success) do |v|
+            value.sub(/\.$/, '!')
+          end
+
+          expect(return_value).to eq('Lamy is awesome!')
+        end
+      end
+    end
+
+    context 'status is not among input statuses' do
+      context 'does not pass block' do
+        it 'returns false' do
+          result = subject.ok('Lamy is a half snow elf.')
+          expect(result.any_then(:error)).to be false
+        end
+      end
+
+      context 'passes a block' do
+        it 'returns false' do
+          result = subject.ok('Lamy is a half snow elf.')
+          expect(result.any_then(:error) {|v| puts v }).to be false
+        end
+      end
+    end
+  end
+
   describe '#status_is?' do
     context 'object status matches the input' do
       it 'returns true' do

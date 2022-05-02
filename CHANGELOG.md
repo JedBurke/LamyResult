@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+### [0.4.0] - 2022-05-02
+
+### Added
+
+- `any_then` and alias `either_then` yields value to a block if the instance status matches the input statuses.
+
 ## [0.3.0] - 2022-03-13
 
 ### Added

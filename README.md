@@ -52,6 +52,12 @@ result.ok_then do |v|
   do_something_cool v
 end
 
+# When either of the input statuses match the instance's status, the
+# instance value will be yielded to the block.
+result.any_then(:ok, :success) do |value|
+  value.upcase
+end
+
 result.to_a
 # Output: [:ok, 'Lamy is awesome']
 

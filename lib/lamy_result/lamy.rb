@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module LamyResult
-
   # Creates and checks result instances.
   #
   # A quick reference for class and instance methods.
@@ -41,8 +40,24 @@ module LamyResult
       statuses.any? {|status| status_is?(status) }
     end
 
-    # Consider: Add assert_any_then(*values, &block)
-    # either_then(*statuses,)
+    # Yields the instance value if its status matches either of the instance
+    # statuses. If no block is given, the value will be returned. If there is
+    # no match, false will be returned.
+    #
+    # Usage:
+    #   status = Lamy.ok('Yukihana Lamy is awesome')
+    #   status.any_then(:ok, :success, :good) {|v| v.upcase }
+    #
+    def any_then(*statuses)
+      if any?(*statuses)
+        return yield if block_given?
+
+        # Just return the value.
+        return @value
+      end
+
+      false
+    end
 
     # Calls #status_is? on the `status_to_check` and if true, yields the value.
     # Otherwise, returns nil. This is a low-level method meant to be
@@ -51,6 +66,7 @@ module LamyResult
       if status_is?(status_to_check)
         return yield @value if block_given?
 
+        # Just return the value.
         return @value
       end
 
@@ -100,13 +116,13 @@ module LamyResult
         new_status, *new_status_aliases = Array(status)
 
         # Defines the short-hand class method like .ok(input)
-        self.define_status_method(new_status, *new_status_aliases)
+        define_status_method(new_status, *new_status_aliases)
 
         # Define status check instance methods like #ok?
-        self.define_status_check_method(new_status, *new_status_aliases)
+        define_status_check_method(new_status, *new_status_aliases)
 
         # Define conditional instance methods like #ok_then
-        self.define_conditional_then_method(new_status, *new_status_aliases)
+        define_conditional_then_method(new_status, *new_status_aliases)
       end
     end
 
@@ -118,19 +134,19 @@ module LamyResult
     end
 
     def self.format_status_check_method(status)
-      self.format_status("#{status}?")
+      format_status("#{status}?")
     end
 
     def self.format_conditional_method(status)
-      self.format_status("#{status}_then")
+      format_status("#{status}_then")
     end
 
     def self.define_status_method(status, *aliases)
       self
-      .class
-      .send(:define_method, status) do |value|
-        Lamy.new(status: status, value: value)
-      end
+        .class
+        .send(:define_method, status) do |value|
+          Lamy.new(status: status, value: value)
+        end
 
       # Define aliases for the new status if we got any.
       define_class_aliases_for(status, *aliases)
@@ -151,7 +167,7 @@ module LamyResult
 
       assert_new_instance_method! method_symbol
 
-      self.define_instance_aliases_for(method_symbol, *status_check_aliases)
+      define_instance_aliases_for(method_symbol, *status_check_aliases)
     end
 
     def self.define_conditional_then_method(status, *aliases)
@@ -173,8 +189,8 @@ module LamyResult
     # Checks if the method is an instance method, otherwise raises a
     # StandardError.
     def self.assert_new_instance_method!(method_symbol)
-      unless self.instance_methods.include?(method_symbol)
-        raise StandardError.new "##{method_symbol} is not an instance method."
+      unless instance_methods.include?(method_symbol)
+        raise StandardError, "##{method_symbol} is not an instance method."
       end
 
       true
@@ -217,6 +233,7 @@ module LamyResult
     alias == status_is?
     alias eql? status_is?
     alias either? any?
+    alias either_then any_then
 
     class << self
       # The singular form may be more comfortable for users wanting to define
